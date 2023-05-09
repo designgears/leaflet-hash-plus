@@ -44,7 +44,7 @@
    * @returns {object} See above notes.
    */
   L.Hash.parseHash = function(hash) {
-    let args = hash.substr(1).split("/"); // Assume it starts with a '#'
+    let args = hash.substring(1).split("/").filter(n => n); // Assume it starts with a '#'
 
     // Assuming the map properties validate, everything after them is metadata.
     let meta = args.length > 3 ? args.slice(3) : [];
@@ -68,12 +68,12 @@
       }
     }
 
-    if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
-      return {
-        view: false,
-        meta: meta,
-      }
-    }
+    // if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+    //   return {
+    //     view: false,
+    //     meta: meta,
+    //   }
+    // }
 
     // All valid, all in range.
     return {
@@ -130,7 +130,7 @@
      */
     init: function(map) {
       this.map = map;
-      console.log('running map init()');
+      // console.log('running map init()');
       this.map.whenReady(this.setupMap, this);
     },
 
@@ -150,13 +150,13 @@
      */
     setupMap: function() {
       var hash = this.parseHash(location.hash);
-      console.log('setupMap()', hash);
+      // console.log('setupMap()', hash);
       this.map.fire('hashmetainit', {meta: hash.meta});
 
       // Force update of hash if the current one is invalid
       this.isSetUp = true;
       if (false === hash.view) {
-        console.log('hash view is false');
+        // console.log('hash view is false');
         this.hashMeta = [];
         this.updateHash();
         this.startListening();
@@ -196,7 +196,7 @@
 
       var metaChanges = JSON.stringify(this.hashMeta) !== JSON.stringify(meta)
 
-      console.log('metaChanges', metaChanges);
+      // console.log('metaChanges', metaChanges);
       if (metaChanges) {
         if (fireEvents) {
           this.map.fire('hashmetachange', {meta: meta, previousMeta: this.hashMeta});
@@ -227,7 +227,7 @@
      */
     onHashChange: function() {
       var hash = this.parseHash(location.hash);
-      console.log('hash changed', hash);
+      // console.log('hash changed', hash);
 
       // Force update of hash if the current one is invalid
       if (false === hash.view) {
@@ -286,10 +286,10 @@
      * Called to update the hash for the map, based on map state and meta.
      */
     updateHash: function() {
-      console.log('updating hash', {
-        from: location.hash,
-        to: this.formatHash(this.map, this.hashMeta),
-      });
+      // console.log('updating hash', {
+      //   from: location.hash,
+      //   to: this.formatHash(this.map, this.hashMeta),
+      // });
       location.hash = this.formatHash(this.map, this.hashMeta);
     },
 
